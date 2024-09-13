@@ -36,10 +36,10 @@ public class TestCreateIndex {
     public void createIndex() {
         logger.info("create index start.............................................");
         Schema schema = new Schema()
-                .addField(new Schema.TextField("name"))
-                .addField(new Schema.TextField("keyword"))
-                .addField(new Schema.TextField("category"));
-        jedisSearchUtil.createIndex(CommonConstant.KEYWORDS_INDEX_NAME, "intellectualProperty", schema);
+                .addField(new Schema.TextField("brandName"))
+                .addField(new Schema.TextField("keywords"))
+                .addField(new Schema.TextField("categoryIds"));
+        jedisSearchUtil.createIndex(CommonConstant.KEYWORDS_INDEX_NAME, "search:intellectual:", schema);
         logger.info("create index end...................................");
     }
 
