@@ -10,6 +10,8 @@ import redis.clients.jedis.search.IndexDefinition;
 import redis.clients.jedis.search.IndexOptions;
 import redis.clients.jedis.search.Schema;
 
+import java.util.Set;
+
 /**
  * @description: redisearch util
  * @author: husj
@@ -33,5 +35,9 @@ public class JedisSearchUtil {
                 .setPrefixes(prefix)
                 .setLanguage(CommonConstant.REDIS_INDEX_LANGUAGE);
         client.ftCreate(idxName, IndexOptions.defaultOptions().setDefinition(rule), schema);
+    }
+
+    public Set<String> indexList() {
+        return client.ftList();
     }
 }

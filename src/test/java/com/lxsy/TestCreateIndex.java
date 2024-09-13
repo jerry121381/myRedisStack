@@ -13,6 +13,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import redis.clients.jedis.search.Schema;
 
+import java.util.Set;
+
 /**
  * @description: create index
  * @author: husj
@@ -37,5 +39,11 @@ public class TestCreateIndex {
                 .addField(new Schema.TextField("category"));
         jedisSearchUtil.createIndex(CommonConstant.KEYWORDS_INDEX_NAME, "intellectualProperty", schema);
         logger.info("create index end...................................");
+    }
+
+    @Test
+    public void indexList() {
+        Set<String> strings = jedisSearchUtil.indexList();
+        logger.info("所有的索引{}", strings);
     }
 }
