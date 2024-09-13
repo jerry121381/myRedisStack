@@ -1,0 +1,37 @@
+server:
+  port: 9090
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: bootRedisSearch
+  datasource:
+    url: jdbc:mysql://39.100.182.216:3406/lxsy_db?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false&transformedBitIsBoolean=true&serverTimezone=GMT%2B8
+    username: root
+    password: hsj20000921
+    dbcp2:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    host: 39.100.182.216
+    port: 6379
+    password: husj20000921
+    database: 0
+    timeout: 5000
+    #    lettuce: # 采用Lettuce开发组件
+    #      pool: # 连接池配置
+    #        max-active: 100  # 最大连接数
+    #        max-wait: -1ms # 连接池最大阻塞等待时间，负数表示没有限制
+    #        max-idle: 200 # 最大维持连接数
+    #        min-idle: 100 # 最小维持连接数
+    jedis:
+      pool:
+        max-active: 100
+        max-wait: -1
+        max-idle: 200
+        min-idle: 100
+
+logging: # 日志
+  level: # 日志级别
+    root: info # 全局级别
+    com.lxsy: debug # 局部级别
