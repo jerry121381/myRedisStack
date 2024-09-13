@@ -2,6 +2,7 @@ package com.lxsy;
 
 import com.lxsy.config.JedisConfig;
 import com.lxsy.constant.CommonConstant;
+import com.lxsy.modules.brand.vo.BrandVO;
 import com.lxsy.utils.JedisSearchUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import redis.clients.jedis.search.Schema;
 
+import java.util.Arrays;
 import java.util.Set;
 
 /**
@@ -45,5 +47,20 @@ public class TestCreateIndex {
     public void indexList() {
         Set<String> strings = jedisSearchUtil.indexList();
         logger.info("所有的索引{}", strings);
+    }
+
+    @Test
+    public void addBrandIndex() {
+        BrandVO brandVO = new BrandVO();
+        brandVO.setId(100001);
+        brandVO.setBrandNumber("123456789");
+        brandVO.setBrandName("测试商标1");
+        brandVO.setBrandImage("https://www.baidu.com");
+        brandVO.setBrandProveImage("https://www.baidu.com");
+        brandVO.setJointDeclaration("xxxxxxxxxxxxxxxxxx");
+        brandVO.setIsShow(1);
+        brandVO.setKeywords(Arrays.asList("詹品", "小凤仙"));
+        brandVO.setCategoryIds(Arrays.asList(888888L, 8888889L));
+        jedisSearchUtil.addBrandIndex(CommonConstant.INTELLECTUAL_PROPERTY_PACKAGE, brandVO);
     }
 }

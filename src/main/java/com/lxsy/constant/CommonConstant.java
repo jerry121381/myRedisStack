@@ -11,4 +11,6 @@ public interface CommonConstant {
     String KEYWORDS_INDEX_NAME = "search:keyword:index";
 
     String REDIS_INDEX_LANGUAGE = "chinese";
+
+    String INTELLECTUAL_PROPERTY_PACKAGE = "search:intellectual:";
 }
