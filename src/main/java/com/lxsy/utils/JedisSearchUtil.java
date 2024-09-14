@@ -6,8 +6,8 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lxsy.constant.CommonConstant;
-import com.lxsy.modules.brand.dto.BrandDTO;
-import com.lxsy.modules.brand.vo.BrandVO;
+import com.lxsy.modules.brand.dto.BrandCacheDTO;
+import com.lxsy.modules.brand.vo.BrandCacheVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -58,15 +58,15 @@ public class JedisSearchUtil {
 
     /**
      * 添加商标索引
-     * @param brandVO 商标信息
+     * @param brandCacheVO 商标信息
      * @return 是否成功
      */
-    public boolean addBrandIndex(String keyPrefix, BrandVO brandVO) {
-        BrandDTO target = new BrandDTO();
-        MyBeanUtil.copyProperties(brandVO, target);
+    public boolean addBrandIndex(String keyPrefix, BrandCacheVO brandCacheVO) {
+        BrandCacheDTO target = new BrandCacheDTO();
+        MyBeanUtil.copyProperties(brandCacheVO, target);
         Map<String, String> hash = MyBeanUtil.toMap(target);
         hash.put("_language", CommonConstant.REDIS_INDEX_LANGUAGE);
-        client.hset(keyPrefix + brandVO.getId(), hash);
+        client.hset(keyPrefix + brandCacheVO.getId(), hash);
         return true;
     }
 
@@ -83,21 +83,21 @@ public class JedisSearchUtil {
         return client.ftSearch(indexName, query);
     }
 
-    private void addBrand(String keyPrefix, BrandVO brandVO) {
+    private void addBrand(String keyPrefix, BrandCacheVO brandCacheVO) {
 
     }
 
 
-    public boolean addBrandList(String keyPrefix, List<BrandVO> brandVOList) {
+    public boolean addBrandList(String keyPrefix, List<BrandCacheVO> brandCacheVOList) {
         int chunk = 100;
-        List<List<BrandVO>> partition = ListUtil.partition(brandVOList, chunk); // 将list 切割为指定大小的子list
+        List<List<BrandCacheVO>> partition = ListUtil.partition(brandCacheVOList, chunk); // 将list 切割为指定大小的子list
         AbstractPipeline pipelined = client.pipelined();
-        for (List<BrandVO> brands : partition) {
-            for (BrandVO brand : brands) {
-                BrandDTO brandDTO = new BrandDTO();
-                BeanUtils.copyProperties(brand, brandDTO);
-                Map<String, String> hash = MyBeanUtil.toMap(brandDTO);
-                String pinyin = PinyinUtil.getPinyin(brandDTO.getBrandName(), "");
+        for (List<BrandCacheVO> brands : partition) {
+            for (BrandCacheVO brand : brands) {
+                BrandCacheDTO brandCacheDTO = new BrandCacheDTO();
+                BeanUtils.copyProperties(brand, brandCacheDTO);
+                Map<String, String> hash = MyBeanUtil.toMap(brandCacheDTO);
+                String pinyin = PinyinUtil.getPinyin(brandCacheDTO.getBrandName(), "");
                 hash.put("pinyin", pinyin);
                 hash.put("_language", CommonConstant.REDIS_INDEX_LANGUAGE);
                 pipelined.hset(keyPrefix + brand.getId(), hash);
@@ -121,15 +121,15 @@ public class JedisSearchUtil {
 
     /**
      * 添加单条商标json索引
-     * @param brandVO 商标信息
+     * @param brandCacheVO 商标信息
      * @return 是否成功
      */
-    public boolean addJsonBrand(String keyPrefix, BrandVO brandVO) {
-        BrandDTO brandDTO = new BrandDTO();
-        BeanUtils.copyProperties(brandVO, brandDTO);
+    public boolean addJsonBrand(String keyPrefix, BrandCacheVO brandCacheVO) {
+        BrandCacheDTO brandCacheDTO = new BrandCacheDTO();
+        BeanUtils.copyProperties(brandCacheVO, brandCacheDTO);
         try {
-            String s = objectMapper.writeValueAsString(brandDTO);
-            client.jsonSet(keyPrefix + brandVO.getId(), s);
+            String s = objectMapper.writeValueAsString(brandCacheDTO);
+            client.jsonSet(keyPrefix + brandCacheVO.getId(), s);
         } catch (JsonProcessingException e) {
             logger.error("json序列化失败", e);
         }

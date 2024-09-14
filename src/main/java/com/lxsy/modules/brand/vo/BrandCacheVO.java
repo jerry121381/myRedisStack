@@ -1,4 +1,4 @@
-package com.lxsy.modules.brand.dto;
+package com.lxsy.modules.brand.vo;
 
 import lombok.Data;
 
@@ -6,17 +6,18 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * @description: brand DTO
+ * @description: brand VO
  * @author: husj
  * @create: 2024-09-13
  **/
 @Data
-public class BrandDTO implements Serializable {
-    private static final long serialVersionUID = 7291308230178185804L;
+public class BrandCacheVO implements Serializable {
+    private static final long serialVersionUID = 6637505084948390239L;
+
     /**
      * 组织-商标编号
      */
-    private Integer id;
+    private String id;
     /**
      * 商标号
      */
@@ -44,6 +45,5 @@ public class BrandDTO implements Serializable {
 
     private List<String> keywords;
 
-    private List<Long> categoryIds;
-
+    private List<String> categoryIds;
 }
