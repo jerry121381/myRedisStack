@@ -112,12 +112,11 @@ public class JedisSearchUtil {
      * @param prefix  要索引的数据前缀（即索引查询的数据的目标地址）
      * @param schema  索引字段配置
      */
-    public boolean createJsonIndex(String idxName, String prefix, Schema schema) {
+    public void createJsonIndex(String idxName, String prefix, Schema schema) {
         IndexDefinition rule = new IndexDefinition(IndexDefinition.Type.JSON)
                 .setPrefixes(prefix)
                 .setLanguage(CommonConstant.REDIS_INDEX_LANGUAGE);
         client.ftCreate(idxName, IndexOptions.defaultOptions().setDefinition(rule), schema);
-        return true;
     }
 
     /**
@@ -135,5 +134,18 @@ public class JedisSearchUtil {
             logger.error("json序列化失败", e);
         }
         return true;
+    }
+
+    public SearchResult queryJsonBrand(String indexName, String keyword, Long categoryId) {
+        String queryKey = "";
+        if (StringUtils.isNotEmpty(keyword)) {
+            queryKey += String.format("@brandName:(%s)", keyword);
+        }
+        // if (categoryId != null) {
+        //     queryKey += String.format("@categoryIds:(%s)", categoryId);
+        // }
+        Query query = new Query(queryKey);
+        query.setLanguage(CommonConstant.REDIS_INDEX_LANGUAGE);
+        return client.ftSearch(indexName, query);
     }
 }

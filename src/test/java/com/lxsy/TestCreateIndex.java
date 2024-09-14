@@ -97,26 +97,26 @@ public class TestCreateIndex {
     public void createJsonIndex() {
         logger.info("create index start.............................................");
         Schema schema = new Schema()
-                .addField(new Schema.TextField("brandName"))
-                .addField(new Schema.TextField("keywords"))
-                .addField(new Schema.TextField("categoryIds"));
-        jedisSearchUtil.createIndex(CommonConstant.INTELLECTUAL_PROPERTY_JSON_INDEX_NAME, CommonConstant.INTELLECTUAL_PROPERTY_JSON_INDEX_PREFIX, schema);
+                .addTextField("$.brandName", 1).as("brandName")
+                .addTagField("$.keywords[*]").as("keywords")
+                .addTagField("$.categoryIds[*]").as("categoryIds");
+        jedisSearchUtil.createJsonIndex(CommonConstant.INTELLECTUAL_PROPERTY_JSON_INDEX_NAME, CommonConstant.INTELLECTUAL_PROPERTY_JSON_INDEX_PREFIX, schema);
         logger.info("create index end...................................");
     }
 
     @Test
     public void addJsonBrand() {
         BrandVO brandVO = new BrandVO();
-        // brandVO.setId(100001);
-        // brandVO.setBrandNumber("123456789");
-        // brandVO.setBrandName("测试商标1");
-        // brandVO.setBrandImage("https://www.baidu.com");
-        // brandVO.setBrandProveImage("https://www.baidu.com");
-        // brandVO.setJointDeclaration("xxxxxxxxxxxxxxxxxx");
-        // brandVO.setIsShow(1);
-        // brandVO.setKeywords(Arrays.asList("詹品", "小凤仙"));
-        // brandVO.setCategoryIds(Arrays.asList(888888L, 8888889L));
-        // jedisSearchUtil.addJsonBrand(CommonConstant.INTELLECTUAL_PROPERTY_JSON_INDEX_PREFIX, brandVO);
+        brandVO.setId(100001);
+        brandVO.setBrandNumber("123456789");
+        brandVO.setBrandName("测试商标1");
+        brandVO.setBrandImage("https://www.baidu.com");
+        brandVO.setBrandProveImage("https://www.baidu.com");
+        brandVO.setJointDeclaration("xxxxxxxxxxxxxxxxxx");
+        brandVO.setIsShow(1);
+        brandVO.setKeywords(Arrays.asList("詹品", "小凤仙"));
+        brandVO.setCategoryIds(Arrays.asList(888888L, 8888889L));
+        jedisSearchUtil.addJsonBrand(CommonConstant.INTELLECTUAL_PROPERTY_JSON_INDEX_PREFIX, brandVO);
 
         // brandVO.setId(100002);
         // brandVO.setBrandNumber("123456789");
@@ -129,15 +129,24 @@ public class TestCreateIndex {
         // brandVO.setCategoryIds(Collections.singletonList(8888889L));
         // jedisSearchUtil.addJsonBrand(CommonConstant.INTELLECTUAL_PROPERTY_JSON_INDEX_PREFIX, brandVO);
 
-        brandVO.setId(100003);
-        brandVO.setBrandNumber("123456789");
-        brandVO.setBrandName("绿水韵味");
-        brandVO.setBrandImage("https://www.baidu.com");
-        brandVO.setBrandProveImage("https://www.baidu.com");
-        brandVO.setJointDeclaration("xxxxxxxxxxxxxxxxxx");
-        brandVO.setIsShow(1);
-        brandVO.setKeywords(Arrays.asList("水果", "烟台苹果"));
-        brandVO.setCategoryIds(Arrays.asList(8888889L, 88888810L));
-        boolean b = jedisSearchUtil.addJsonBrand(CommonConstant.INTELLECTUAL_PROPERTY_JSON_INDEX_PREFIX, brandVO);
+        // brandVO.setId(100003);
+        // brandVO.setBrandNumber("123456789");
+        // brandVO.setBrandName("绿水韵味");
+        // brandVO.setBrandImage("https://www.baidu.com");
+        // brandVO.setBrandProveImage("https://www.baidu.com");
+        // brandVO.setJointDeclaration("xxxxxxxxxxxxxxxxxx");
+        // brandVO.setIsShow(1);
+        // brandVO.setKeywords(Arrays.asList("水果", "烟台苹果"));
+        // brandVO.setCategoryIds(Arrays.asList(8888889L, 88888810L));
+        // boolean b = jedisSearchUtil.addJsonBrand(CommonConstant.INTELLECTUAL_PROPERTY_JSON_INDEX_PREFIX, brandVO);
+    }
+
+    @Test
+    public void queryJsonByCondition() {
+        // String keyword = "乳山牡蛎";
+        String keyword = "";
+        Long categoryId = 8888889L;
+        SearchResult searchResult = jedisSearchUtil.queryJsonBrand(CommonConstant.INTELLECTUAL_PROPERTY_JSON_INDEX_NAME, keyword, categoryId);
+        logger.info("查询结果{}", searchResult);
     }
 }
