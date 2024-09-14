@@ -103,4 +103,41 @@ public class TestCreateIndex {
         jedisSearchUtil.createIndex(CommonConstant.INTELLECTUAL_PROPERTY_JSON_INDEX_NAME, CommonConstant.INTELLECTUAL_PROPERTY_JSON_INDEX_PREFIX, schema);
         logger.info("create index end...................................");
     }
+
+    @Test
+    public void addJsonBrand() {
+        BrandVO brandVO = new BrandVO();
+        // brandVO.setId(100001);
+        // brandVO.setBrandNumber("123456789");
+        // brandVO.setBrandName("测试商标1");
+        // brandVO.setBrandImage("https://www.baidu.com");
+        // brandVO.setBrandProveImage("https://www.baidu.com");
+        // brandVO.setJointDeclaration("xxxxxxxxxxxxxxxxxx");
+        // brandVO.setIsShow(1);
+        // brandVO.setKeywords(Arrays.asList("詹品", "小凤仙"));
+        // brandVO.setCategoryIds(Arrays.asList(888888L, 8888889L));
+        // jedisSearchUtil.addJsonBrand(CommonConstant.INTELLECTUAL_PROPERTY_JSON_INDEX_PREFIX, brandVO);
+
+        // brandVO.setId(100002);
+        // brandVO.setBrandNumber("123456789");
+        // brandVO.setBrandName("乳山牡蛎");
+        // brandVO.setBrandImage("https://www.baidu.com");
+        // brandVO.setBrandProveImage("https://www.baidu.com");
+        // brandVO.setJointDeclaration("xxxxxxxxxxxxxxxxxx");
+        // brandVO.setIsShow(1);
+        // brandVO.setKeywords(Arrays.asList("海鲜", "水产"));
+        // brandVO.setCategoryIds(Collections.singletonList(8888889L));
+        // jedisSearchUtil.addJsonBrand(CommonConstant.INTELLECTUAL_PROPERTY_JSON_INDEX_PREFIX, brandVO);
+
+        brandVO.setId(100003);
+        brandVO.setBrandNumber("123456789");
+        brandVO.setBrandName("绿水韵味");
+        brandVO.setBrandImage("https://www.baidu.com");
+        brandVO.setBrandProveImage("https://www.baidu.com");
+        brandVO.setJointDeclaration("xxxxxxxxxxxxxxxxxx");
+        brandVO.setIsShow(1);
+        brandVO.setKeywords(Arrays.asList("水果", "烟台苹果"));
+        brandVO.setCategoryIds(Arrays.asList(8888889L, 88888810L));
+        boolean b = jedisSearchUtil.addJsonBrand(CommonConstant.INTELLECTUAL_PROPERTY_JSON_INDEX_PREFIX, brandVO);
+    }
 }

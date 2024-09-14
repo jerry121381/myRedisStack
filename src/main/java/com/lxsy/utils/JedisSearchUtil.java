@@ -3,6 +3,8 @@ package com.lxsy.utils;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.extra.pinyin.PinyinUtil;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lxsy.constant.CommonConstant;
 import com.lxsy.modules.brand.dto.BrandDTO;
 import com.lxsy.modules.brand.vo.BrandVO;
@@ -30,6 +32,8 @@ public class JedisSearchUtil {
 
     @Autowired
     private UnifiedJedis client;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     /**
      * 创建索引
@@ -113,6 +117,23 @@ public class JedisSearchUtil {
                 .setPrefixes(prefix)
                 .setLanguage(CommonConstant.REDIS_INDEX_LANGUAGE);
         client.ftCreate(idxName, IndexOptions.defaultOptions().setDefinition(rule), schema);
+        return true;
+    }
+
+    /**
+     * 添加单条商标json索引
+     * @param brandVO 商标信息
+     * @return 是否成功
+     */
+    public boolean addJsonBrand(String keyPrefix, BrandVO brandVO) {
+        BrandDTO brandDTO = new BrandDTO();
+        BeanUtils.copyProperties(brandVO, brandDTO);
+        try {
+            String s = objectMapper.writeValueAsString(brandDTO);
+            client.jsonSet(keyPrefix + brandVO.getId(), s);
+        } catch (JsonProcessingException e) {
+            logger.error("json序列化失败", e);
+        }
         return true;
     }
 }
