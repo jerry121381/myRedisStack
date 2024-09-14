@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import redis.clients.jedis.search.Schema;
+import redis.clients.jedis.search.SearchResult;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -81,6 +82,14 @@ public class TestCreateIndex {
         brandVO.setIsShow(1);
         brandVO.setKeywords(Arrays.asList("水果", "烟台苹果"));
         brandVO.setCategoryIds(Arrays.asList(8888889L, 88888810L));
-        jedisSearchUtil.addBrandIndex(CommonConstant.INTELLECTUAL_PROPERTY_PACKAGE, brandVO);
+        boolean b = jedisSearchUtil.addBrandIndex(CommonConstant.INTELLECTUAL_PROPERTY_PACKAGE, brandVO);
+    }
+
+    @Test
+    public void queryByCondition() {
+        String keyword = "詹品";
+        Long categoryId = 888L;
+        SearchResult searchResult = jedisSearchUtil.queryBrand(CommonConstant.KEYWORDS_INDEX_NAME, keyword, categoryId);
+        logger.info("查询结果{}", searchResult);
     }
 }

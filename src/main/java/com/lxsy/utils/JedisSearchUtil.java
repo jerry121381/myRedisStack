@@ -2,6 +2,7 @@ package com.lxsy.utils;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.extra.pinyin.PinyinUtil;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.lxsy.constant.CommonConstant;
 import com.lxsy.modules.brand.dto.BrandDTO;
 import com.lxsy.modules.brand.vo.BrandVO;
@@ -12,9 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.AbstractPipeline;
 import redis.clients.jedis.UnifiedJedis;
-import redis.clients.jedis.search.IndexDefinition;
-import redis.clients.jedis.search.IndexOptions;
-import redis.clients.jedis.search.Schema;
+import redis.clients.jedis.search.*;
 
 import java.util.List;
 import java.util.Map;
@@ -45,22 +44,45 @@ public class JedisSearchUtil {
         client.ftCreate(idxName, IndexOptions.defaultOptions().setDefinition(rule), schema);
     }
 
+    /**
+     * 查询索引列表
+     * @return 索引列表
+     */
     public Set<String> indexList() {
         return client.ftList();
     }
 
+    /**
+     * 添加商标索引
+     * @param brandVO 商标信息
+     * @return 是否成功
+     */
     public boolean addBrandIndex(String keyPrefix, BrandVO brandVO) {
-        addBrand(keyPrefix, brandVO);
-        return true;
-    }
-
-    private void addBrand(String keyPrefix, BrandVO brandVO) {
         BrandDTO target = new BrandDTO();
         MyBeanUtil.copyProperties(brandVO, target);
         Map<String, String> hash = MyBeanUtil.toMap(target);
         hash.put("_language", CommonConstant.REDIS_INDEX_LANGUAGE);
         client.hset(keyPrefix + brandVO.getId(), hash);
+        return true;
     }
+
+    public SearchResult queryBrand(String indexName, String keyword, Long categoryId) {
+        String queryKey = "";
+        if (StringUtils.isNotEmpty(keyword)) {
+            queryKey += String.format("@brandName:(%s) | @keywords:(%s)", keyword, keyword);
+        }
+        if (categoryId != null) {
+            queryKey += String.format("@categoryIds:(%s)", categoryId);
+        }
+        Query query = new Query(queryKey);
+        query.setLanguage(CommonConstant.REDIS_INDEX_LANGUAGE);
+        return client.ftSearch(indexName, query);
+    }
+
+    private void addBrand(String keyPrefix, BrandVO brandVO) {
+
+    }
+
 
     public boolean addBrandList(String keyPrefix, List<BrandVO> brandVOList) {
         int chunk = 100;
