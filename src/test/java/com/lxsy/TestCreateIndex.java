@@ -92,4 +92,15 @@ public class TestCreateIndex {
         SearchResult searchResult = jedisSearchUtil.queryBrand(CommonConstant.KEYWORDS_INDEX_NAME, keyword, categoryId);
         logger.info("查询结果{}", searchResult);
     }
+
+    @Test
+    public void createJsonIndex() {
+        logger.info("create index start.............................................");
+        Schema schema = new Schema()
+                .addField(new Schema.TextField("brandName"))
+                .addField(new Schema.TextField("keywords"))
+                .addField(new Schema.TextField("categoryIds"));
+        jedisSearchUtil.createIndex(CommonConstant.INTELLECTUAL_PROPERTY_JSON_INDEX_NAME, CommonConstant.INTELLECTUAL_PROPERTY_JSON_INDEX_PREFIX, schema);
+        logger.info("create index end...................................");
+    }
 }

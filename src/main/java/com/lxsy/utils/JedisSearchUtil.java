@@ -101,4 +101,18 @@ public class JedisSearchUtil {
         }
         return true;
     }
+
+    /**
+     * 创建json索引
+     * @param idxName 索引名称
+     * @param prefix  要索引的数据前缀（即索引查询的数据的目标地址）
+     * @param schema  索引字段配置
+     */
+    public boolean createJsonIndex(String idxName, String prefix, Schema schema) {
+        IndexDefinition rule = new IndexDefinition(IndexDefinition.Type.JSON)
+                .setPrefixes(prefix)
+                .setLanguage(CommonConstant.REDIS_INDEX_LANGUAGE);
+        client.ftCreate(idxName, IndexOptions.defaultOptions().setDefinition(rule), schema);
+        return true;
+    }
 }

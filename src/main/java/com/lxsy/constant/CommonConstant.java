@@ -13,4 +13,8 @@ public interface CommonConstant {
     String REDIS_INDEX_LANGUAGE = "chinese";
 
     String INTELLECTUAL_PROPERTY_PACKAGE = "search:intellectual:";
+
+    String INTELLECTUAL_PROPERTY_JSON_INDEX_NAME = "search:intellectual:index";
+
+    String INTELLECTUAL_PROPERTY_JSON_INDEX_PREFIX = "search:json:intellectual:";
 }
